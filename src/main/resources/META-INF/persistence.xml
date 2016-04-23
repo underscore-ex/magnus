@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="MagnusPU">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>com.upwork.magnus.entity.AirlineEntity</class>
+        <class>com.upwork.magnus.entity.AirportEntity</class>
+        <class>com.upwork.magnus.entity.FlightEntity</class>
+        <class>com.upwork.magnus.entity.FlightInstanceEntity</class>
+        <class>com.upwork.magnus.entity.PassengerEntity</class>
+        <class>com.upwork.magnus.entity.ReservationEntity</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/magnus"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="what"/>
+        </properties>
+    </persistence-unit>
+</persistence>

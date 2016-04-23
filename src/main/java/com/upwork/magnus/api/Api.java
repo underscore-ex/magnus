@@ -1,5 +1,10 @@
 package com.upwork.magnus.api;
 
+import com.upwork.magnus.api.core.LocalEntityManagerFactory;
+import com.upwork.magnus.entity.AirlineEntity;
+import com.upwork.magnus.entity.AirportEntity;
+
+import javax.persistence.EntityManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -7,11 +12,14 @@ import javax.ws.rs.core.Response;
  * Created by ali on 2016-04-21.
  */
 @Path("/api")
-public class FlightsApi {
+public class Api {
     @GET
     @Path("/flights/{from}/{date}/{tickets}")
     public Response getTicketsByOrigin(@PathParam("from") String from, @PathParam("date") String date, @PathParam("tickets") String tickets){
         String output = from + " - " + date + " - " + tickets;
+        EntityManager em = LocalEntityManagerFactory.createEntityManager();
+        AirlineEntity airline = em.find(AirlineEntity.class, 1);
+        System.out.println("{\"airlineId\":"+airline.getAirlineId()+",\"name\":"+airline.getName()+"}");
         return Response.status(Response.Status.OK).entity(output).build();
     }
 

@@ -9,6 +9,7 @@ public class Flights {
     private double totalPrice;
     private int flightID;
     private int travelTime;
+    private int flightNumber;
     private String destination;
     private String origin;
 
@@ -66,5 +67,13 @@ public class Flights {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public int getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(int flightNumber) {
+        this.flightNumber = flightNumber;
     }
 }

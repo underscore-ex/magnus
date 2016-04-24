@@ -8,10 +8,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "airline", schema = "", catalog = "magnus")
 public class AirlineEntity {
+    @Id
     private int airlineId;
     private String name;
 
-    @Id
     @Column(name = "airlineId", nullable = false, insertable = true, updatable = true)
     public int getAirlineId() {
         return airlineId;

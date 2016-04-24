@@ -2,12 +2,16 @@ package com.upwork.magnus.api.core;
 
 import com.upwork.magnus.api.persistence.PersistenceHelper;
 import com.upwork.magnus.entity.AirportEntity;
+import com.upwork.magnus.entity.FlightEntity;
+import com.upwork.magnus.model.FlightDetail;
 import com.upwork.magnus.model.FlightError;
+import com.upwork.magnus.model.Flights;
 import org.joda.time.DateTime;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -24,6 +28,7 @@ public class FlightService implements BaseService {
     private int noOfTickets;
     private String toIataCode;
     private boolean isDestinationSet;
+    private FlightDetail flightDetail;
 
     public FlightService(EntityManager em, String from, String date, String tickets) {
         this.em = em;
@@ -50,11 +55,35 @@ public class FlightService implements BaseService {
     }
 
     public void process(){
+        PersistenceHelper ph = new PersistenceHelper(em);
+        Timestamp ts = new Timestamp(dateTime.getMillis());
+        List<AirportEntity> airportsFlights = ph.getAirportsFlights(fromIataCode, ts);
+        convert (airportsFlights);
+    }
 
+    private void convert(List<AirportEntity> airportsFlights) {
+        if (airportsFlights.size() > 0){
+            flightDetail = new FlightDetail();
+            List<FlightEntity> flighEntityList = airportsFlights.get(0).getFlight();
+            Flights[] flights = new Flights[flighEntityList.size()];
+            flightDetail.setFlights(flights);
+            int count = 0;
+            for (FlightEntity fe : flighEntityList){
+                if (flightDetail.getAirline() == null){
+                    flightDetail.setAirline(fe.getAirline().getName());
+                }
+                Flights f = new Flights();
+                f.setFlightID(fe.getFlightId());
+                f.setFlightNumber(fe.getFlightNumber());
+                f.setNumberOfSeats(fe.getSeats());
+                flights[count] = f;
+                count++;
+            }
+        }
     }
 
     private boolean isValideTicketNumber(String tickets){
-        if (tickets != null || tickets.trim().isEmpty()){
+        if (tickets == null || tickets.trim().isEmpty()){
             fe = new FlightError(Response.Status.BAD_REQUEST.getStatusCode(),3,"Invalid number of tickets");
             return false;
         } else {
@@ -115,7 +144,11 @@ public class FlightService implements BaseService {
                     .entity(fe)
                     .type(MediaType.APPLICATION_JSON)
                     .build();
+        } else {
+            return Response.status(Response.Status.OK)
+                    .entity(flightDetail)
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
         }
-        return null;
     }
 }

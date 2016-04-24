@@ -1,7 +1,10 @@
 package com.upwork.magnus.entity;
 
+import com.upwork.magnus.model.Passenger;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by ali on 2016-04-23.
@@ -9,10 +12,10 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "reservation", schema = "", catalog = "magnus")
 public class ReservationEntity {
+    @Id
     private int reservationId;
     private BigDecimal totalPrice;
 
-    @Id
     @Column(name = "reservationId", nullable = false, insertable = true, updatable = true)
     public int getReservationId() {
         return reservationId;
@@ -27,10 +30,15 @@ public class ReservationEntity {
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
-
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name="passengerId")
+    private List<PassengerEntity> passenger;
+    public void setPassenger(List<PassengerEntity> passenger){this.passenger = passenger;}
+    public List<PassengerEntity> getPassenger(){return this.passenger;}
 
     @Override
     public boolean equals(Object o) {

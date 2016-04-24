@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by ali on 2016-04-23.
@@ -11,13 +12,13 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "flight_instance", schema = "", catalog = "magnus")
 public class FlightInstanceEntity {
+    @Id
     private int flightInstanceId;
     private Timestamp date;
     private Time time;
     private int availableSeats;
     private BigDecimal price;
 
-    @Id
     @Column(name = "flightInstanceId", nullable = false, insertable = true, updatable = true)
     public int getFlightInstanceId() {
         return flightInstanceId;
@@ -66,6 +67,18 @@ public class FlightInstanceEntity {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="flightId")
+    private FlightEntity flight;
+    public void setFlight(FlightEntity flight){this.flight = flight;}
+    public FlightEntity getFlight(){return this.flight;}
+
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name="reservationId")
+    private List<ReservationEntity> reservation;
+    public void setReservation(List<ReservationEntity> reservation){this.reservation = reservation;}
+    public List<ReservationEntity> getReservation(){return this.reservation;}
 
     @Override
     public boolean equals(Object o) {

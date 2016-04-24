@@ -1,6 +1,7 @@
 package com.upwork.magnus.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by ali on 2016-04-23.
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "airport", schema = "", catalog = "magnus")
 public class AirportEntity {
+    @Id
     private int airportId;
     private String iataCode;
     private String timeZone;
@@ -15,7 +17,7 @@ public class AirportEntity {
     private String country;
     private String city;
 
-    @Id
+
     @Column(name = "airportId", nullable = false, insertable = true, updatable = true)
     public int getAirportId() {
         return airportId;
@@ -75,6 +77,12 @@ public class AirportEntity {
         this.city = city;
     }
 
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name="flightId")
+    private List<FlightEntity> flight;
+    public void setFlight(List<FlightEntity> flight){this.flight = flight;}
+    public List<FlightEntity> getFlight(){return this.flight;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,8 +96,8 @@ public class AirportEntity {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
+        return !(flight != null ? !flight.equals(that.flight) : that.flight != null);
 
-        return true;
     }
 
     @Override
@@ -100,6 +108,7 @@ public class AirportEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (flight != null ? flight.hashCode() : 0);
         return result;
     }
 }

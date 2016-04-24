@@ -7,7 +7,6 @@ import com.upwork.magnus.model.FlightDetail;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**

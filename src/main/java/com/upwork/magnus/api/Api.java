@@ -1,8 +1,9 @@
 package com.upwork.magnus.api;
 
-import com.upwork.magnus.api.core.LocalEntityManagerFactory;
-import com.upwork.magnus.entity.AirlineEntity;
-import com.upwork.magnus.entity.AirportEntity;
+import com.upwork.magnus.api.core.FlightService;
+import com.upwork.magnus.api.core.RequestProcessor;
+import com.upwork.magnus.api.persistence.LocalEntityManagerFactory;
+import com.upwork.magnus.model.FlightDetail;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
@@ -18,9 +19,10 @@ public class Api {
     public Response getTicketsByOrigin(@PathParam("from") String from, @PathParam("date") String date, @PathParam("tickets") String tickets){
         String output = from + " - " + date + " - " + tickets;
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
-        AirlineEntity airline = em.find(AirlineEntity.class, 1);
-        System.out.println("{\"airlineId\":"+airline.getAirlineId()+",\"name\":"+airline.getName()+"}");
-        return Response.status(Response.Status.OK).entity(output).build();
+        FlightService fs = new FlightService(em);
+        fs.setIataCode(from);
+        RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
+        return rp.process(fs);
     }
 
     @GET

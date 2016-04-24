@@ -1,4 +1,4 @@
-package com.upwork.magnus.api.core;
+package com.upwork.magnus.api.persistence;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

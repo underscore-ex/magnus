@@ -1,8 +1,5 @@
 package com.upwork.magnus.api.core;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.upwork.magnus.model.FlightException;
-
 import javax.ws.rs.core.Response;
 
 /**
@@ -11,5 +8,5 @@ import javax.ws.rs.core.Response;
 public interface BaseService {
     boolean validate();
     void process();
-    Response response() throws JsonProcessingException;
+    Response response();
 }

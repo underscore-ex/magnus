@@ -7,6 +7,7 @@ import com.upwork.magnus.model.FlightDetail;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -16,11 +17,10 @@ import javax.ws.rs.core.Response;
 public class Api {
     @GET
     @Path("/flights/{from}/{date}/{tickets}")
+    @Produces("application/json")
     public Response getTicketsByOrigin(@PathParam("from") String from, @PathParam("date") String date, @PathParam("tickets") String tickets){
-        String output = from + " - " + date + " - " + tickets;
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
-        FlightService fs = new FlightService(em);
-        fs.setIataCode(from);
+        FlightService fs = new FlightService(em, from, date, tickets);
         RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
         return rp.process(fs);
     }
@@ -28,6 +28,8 @@ public class Api {
     @GET
     @Path("/flights/{from}/{to}/{date}/{tickets}")
     public Response getTicketsByOriginAndDestination(@PathParam("from") String from, @PathParam("to") String to, @PathParam("date") String date, @PathParam("tickets") String tickets){
+        EntityManager em = LocalEntityManagerFactory.createEntityManager();
+        FlightService fs = new FlightService(em, from, to, date, tickets);
         return Response.status(Response.Status.OK).entity("getTicketsByOriginAndDestination: ").build();
     }
 

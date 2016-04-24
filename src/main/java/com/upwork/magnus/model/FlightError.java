@@ -5,12 +5,13 @@ import java.io.Serializable;
 /**
  * Created by ali on 2016-04-21.
  */
-public class FlightException implements Serializable{
+
+public class FlightError implements Serializable{
     private int httpError;
     private int errorCode;
     private String message;
 
-    public FlightException(int httpError, int errorCode, String message) {
+    public FlightError(int httpError, int errorCode, String message) {
         this.httpError = httpError;
         this.errorCode = errorCode;
         this.message = message;

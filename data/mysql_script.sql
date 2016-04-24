@@ -24,7 +24,7 @@ CREATE TABLE `magnus`.`airport` (
   `airportId` INT NOT NULL AUTO_INCREMENT,
   `IATACode` VARCHAR(45) NOT NULL,
   `timeZone` VARCHAR(45) NOT NULL COMMENT 'Offset in hours * 100',
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(200) NOT NULL,
   `country` VARCHAR(45) NOT NULL,
   `city` VARCHAR(45) NOT NULL,
   `flightId` INT NOT NULL,

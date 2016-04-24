@@ -1,7 +1,7 @@
 package com.upwork.magnus.api.core;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.upwork.magnus.model.FlightException;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+import com.upwork.magnus.model.FlightError;
 
 import javax.ws.rs.core.Response;
 
@@ -15,16 +15,13 @@ public class RequestProcessor<T extends BaseService, O> {
                 service.process();
             }
             return service.response();
-        } catch (JsonProcessingException jpe){
-            FlightException fe = new FlightException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), 10, jpe.getMessage());
-            return buildErrorResponse(fe);
-        }catch (Exception e){
-            FlightException fe = new FlightException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), 10, e.getMessage());
+        } catch (Exception e){
+            FlightError fe = new FlightError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), 10, e.getMessage());
             return buildErrorResponse(fe);
         }
     }
 
-    private Response buildErrorResponse(FlightException fe){
+    private Response buildErrorResponse(FlightError fe){
         String json = "{"
                 + "\"httpError\": "+fe.getHttpError()+","
                 + "\"errorCode\": "+fe.getErrorCode()+","

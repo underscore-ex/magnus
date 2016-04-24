@@ -1,7 +1,5 @@
 package com.upwork.magnus.api.core;
 
-import com.upwork.magnus.model.FlightException;
-
 import javax.ws.rs.core.Response;
 
 /**

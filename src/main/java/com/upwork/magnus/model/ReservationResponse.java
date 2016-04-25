@@ -3,7 +3,7 @@ package com.upwork.magnus.model;
 /**
  * Created by ali on 2016-04-21.
  */
-public class Reservation {
+public class ReservationResponse {
     private int flightID;
     private String origin;
     private String destination;

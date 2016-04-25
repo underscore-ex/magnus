@@ -2,8 +2,10 @@ package com.upwork.magnus.api;
 
 import com.upwork.magnus.api.core.FlightService;
 import com.upwork.magnus.api.core.RequestProcessor;
+import com.upwork.magnus.api.core.ReservationService;
 import com.upwork.magnus.api.persistence.LocalEntityManagerFactory;
 import com.upwork.magnus.model.FlightDetail;
+import com.upwork.magnus.model.ReservationRequest;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
@@ -34,8 +36,12 @@ public class Api {
 
     @POST
     @Path("/reservation/{flightId}")
+    @Consumes("application/json")
     @Produces("application/json")
-    public Response makeReservation(@PathParam("flightId") String flightId){
-        return Response.status(Response.Status.OK).entity("Reservation: " + flightId ).build();
+    public Response makeReservation(@PathParam("flightId") String flightId, ReservationRequest reservationRequest){
+        System.out.println(reservationRequest.toString());
+        EntityManager em = LocalEntityManagerFactory.createEntityManager();
+        ReservationService rs = new ReservationService(em, reservationRequest);
+        return Response.status(Response.Status.OK).entity("ReservationResponse: " + flightId ).build();
     }
 }

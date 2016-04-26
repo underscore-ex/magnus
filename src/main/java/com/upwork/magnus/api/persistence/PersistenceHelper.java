@@ -1,6 +1,7 @@
 package com.upwork.magnus.api.persistence;
 
 import com.upwork.magnus.entity.AirportEntity;
+import com.upwork.magnus.entity.FlightInstanceEntity;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
@@ -32,4 +33,32 @@ public class PersistenceHelper {
                 .getResultList();
     }
 
+    public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, Timestamp date, int tickets){
+        return em.createQuery(
+                "SELECT f FROM FlightInstanceEntity f " +
+                        "JOIN f.originAirport o " +
+                        "WHERE o.iataCode = :iataCode AND f.date = :date AND f.availableSeats >= :tickets"
+        )
+                .setParameter("date", date)
+                .setParameter("iataCode", fromIataCode)
+                .setParameter("tickets", tickets)
+                .getResultList();
+    }
+
+    public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, String toIataCode, Timestamp date, int tickets){
+        String query = "SELECT f FROM FlightInstanceEntity f " +
+                "JOIN f.destinationAirport d " +
+                "JOIN f.originAirport a " +
+                "WHERE d.iataCode = :toIataCode " +
+                "AND a.iataCode = :fromIataCode " +
+                "AND f.date = :date " +
+                "AND f.availableSeats >= :tickets";
+        List resultList = em.createQuery(query)
+                .setParameter("toIataCode", toIataCode)
+                .setParameter("fromIataCode", fromIataCode)
+                .setParameter("date", date)
+                .setParameter("tickets", tickets)
+                .getResultList();
+        return resultList;
+    }
 }

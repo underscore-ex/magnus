@@ -4,12 +4,13 @@ package com.upwork.magnus.model;
  * Created by ali on 2016-04-21.
  */
 public class Flights {
+    private String airline;
     private String date;
     private int numberOfSeats;
     private double totalPrice;
     private int flightID;
     private int travelTime;
-    private int flightNumber;
+    private String flightNumber;
     private String destination;
     private String origin;
 
@@ -69,11 +70,19 @@ public class Flights {
         this.origin = origin;
     }
 
-    public int getFlightNumber() {
+    public String getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(int flightNumber) {
+    public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
+    }
+
+    public String getAirline() {
+        return airline;
+    }
+
+    public void setAirline(String airline) {
+        this.airline = airline;
     }
 }

@@ -31,7 +31,8 @@ public class Api {
     public Response getTicketsByOriginAndDestination(@PathParam("from") String from, @PathParam("to") String to, @PathParam("date") String date, @PathParam("tickets") String tickets){
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, to, date, tickets);
-        return Response.status(Response.Status.OK).entity("getTicketsByOriginAndDestination: ").build();
+        RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
+        return rp.process(fs);
     }
 
     @POST

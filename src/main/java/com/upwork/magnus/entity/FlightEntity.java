@@ -12,9 +12,9 @@ import java.util.List;
 public class FlightEntity {
     @Id
     private int flightId;
-    private int flightNumber;
+    private String flightNumber;
     private int seats;
-    private Timestamp flightTime;
+    private int flightTime;
 
 
     @Column(name = "flightId", nullable = false, insertable = true, updatable = true)
@@ -28,11 +28,11 @@ public class FlightEntity {
 
     @Basic
     @Column(name = "flightNumber", nullable = false, insertable = true, updatable = true)
-    public int getFlightNumber() {
+    public String getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(int flightNumber) {
+    public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
     }
 
@@ -48,11 +48,11 @@ public class FlightEntity {
 
     @Basic
     @Column(name = "flightTime", nullable = false, insertable = true, updatable = true)
-    public Timestamp getFlightTime() {
+    public int getFlightTime() {
         return flightTime;
     }
 
-    public void setFlightTime(Timestamp flightTime) {
+    public void setFlightTime(int flightTime) {
         this.flightTime = flightTime;
     }
 
@@ -76,19 +76,22 @@ public class FlightEntity {
         FlightEntity that = (FlightEntity) o;
 
         if (flightId != that.flightId) return false;
-        if (flightNumber != that.flightNumber) return false;
         if (seats != that.seats) return false;
-        if (flightTime != null ? !flightTime.equals(that.flightTime) : that.flightTime != null) return false;
+        if (flightTime != that.flightTime) return false;
+        if (flightNumber != null ? !flightNumber.equals(that.flightNumber) : that.flightNumber != null) return false;
+        if (airline != null ? !airline.equals(that.airline) : that.airline != null) return false;
+        return !(flightInstanceEntity != null ? !flightInstanceEntity.equals(that.flightInstanceEntity) : that.flightInstanceEntity != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = flightId;
-        result = 31 * result + flightNumber;
+        result = 31 * result + (flightNumber != null ? flightNumber.hashCode() : 0);
         result = 31 * result + seats;
-        result = 31 * result + (flightTime != null ? flightTime.hashCode() : 0);
+        result = 31 * result + flightTime;
+        result = 31 * result + (airline != null ? airline.hashCode() : 0);
+        result = 31 * result + (flightInstanceEntity != null ? flightInstanceEntity.hashCode() : 0);
         return result;
     }
 }

@@ -15,7 +15,6 @@ public class FlightInstanceEntity {
     @Id
     private int flightInstanceId;
     private Timestamp date;
-    private Time time;
     private int availableSeats;
     private BigDecimal price;
 
@@ -36,16 +35,6 @@ public class FlightInstanceEntity {
 
     public void setDate(Timestamp date) {
         this.date = date;
-    }
-
-    @Basic
-    @Column(name = "time", nullable = false, insertable = true, updatable = true)
-    public Time getTime() {
-        return time;
-    }
-
-    public void setTime(Time time) {
-        this.time = time;
     }
 
     @Basic
@@ -80,6 +69,18 @@ public class FlightInstanceEntity {
     public void setReservation(List<ReservationEntity> reservation){this.reservation = reservation;}
     public List<ReservationEntity> getReservation(){return this.reservation;}
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="originAirport", referencedColumnName = "airportId")
+    public AirportEntity originAirport;
+    public void setOriginAirport (AirportEntity originAirport){this.originAirport = originAirport;}
+    public AirportEntity getOriginAirport(){return this.originAirport;}
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="destinationAirport", referencedColumnName = "airportId")
+    public AirportEntity destinationAirport;
+    public void setDestinationAirport(AirportEntity destinationAirport){this.destinationAirport = destinationAirport;}
+    public AirportEntity getDestinationAirport(){return this.destinationAirport;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,7 +91,6 @@ public class FlightInstanceEntity {
         if (flightInstanceId != that.flightInstanceId) return false;
         if (availableSeats != that.availableSeats) return false;
         if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        if (time != null ? !time.equals(that.time) : that.time != null) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
 
         return true;
@@ -100,7 +100,6 @@ public class FlightInstanceEntity {
     public int hashCode() {
         int result = flightInstanceId;
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + availableSeats;
         result = 31 * result + (price != null ? price.hashCode() : 0);
         return result;

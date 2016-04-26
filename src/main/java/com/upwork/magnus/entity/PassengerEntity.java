@@ -8,11 +8,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "passenger", schema = "", catalog = "magnus")
 public class PassengerEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int passengerId;
     private String firstName;
     private String lastName;
 
-    @Id
+
     @Column(name = "passengerId", nullable = false, insertable = true, updatable = true)
     public int getPassengerId() {
         return passengerId;

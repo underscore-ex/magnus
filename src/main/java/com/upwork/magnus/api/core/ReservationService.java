@@ -1,5 +1,7 @@
 package com.upwork.magnus.api.core;
 
+import com.upwork.magnus.api.persistence.PersistenceHelper;
+import com.upwork.magnus.entity.ReservationEntity;
 import com.upwork.magnus.model.FlightError;
 import com.upwork.magnus.model.ReservationResponse;
 import com.upwork.magnus.model.ReservationRequest;
@@ -27,7 +29,9 @@ public class ReservationService implements BaseService {
     }
 
     public void process(){
-
+        PersistenceHelper ph = new PersistenceHelper(em);
+        ReservationEntity re = ph.persistReservation();
+        ph.persistPassenger(reservationRequest.getPassengers());
     }
 
     public Response response() {

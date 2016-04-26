@@ -6,6 +6,7 @@ import com.upwork.magnus.api.core.ReservationService;
 import com.upwork.magnus.api.persistence.LocalEntityManagerFactory;
 import com.upwork.magnus.model.FlightDetail;
 import com.upwork.magnus.model.ReservationRequest;
+import com.upwork.magnus.model.ReservationResponse;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
@@ -43,6 +44,7 @@ public class Api {
         System.out.println(reservationRequest.toString());
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         ReservationService rs = new ReservationService(em, reservationRequest);
-        return Response.status(Response.Status.OK).entity("ReservationResponse: " + flightId ).build();
+        RequestProcessor<ReservationService, ReservationResponse> rp = new RequestProcessor<>();
+        return rp.process(rs);
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "reservation", schema = "", catalog = "magnus")
 public class ReservationEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int reservationId;
     private BigDecimal totalPrice;
 

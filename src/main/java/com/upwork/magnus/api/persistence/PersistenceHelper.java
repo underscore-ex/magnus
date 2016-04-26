@@ -2,6 +2,9 @@ package com.upwork.magnus.api.persistence;
 
 import com.upwork.magnus.entity.AirportEntity;
 import com.upwork.magnus.entity.FlightInstanceEntity;
+import com.upwork.magnus.entity.PassengerEntity;
+import com.upwork.magnus.entity.ReservationEntity;
+import com.upwork.magnus.model.Passenger;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
@@ -60,5 +63,21 @@ public class PersistenceHelper {
                 .setParameter("tickets", tickets)
                 .getResultList();
         return resultList;
+    }
+
+    public void persist (Object o){
+        em.persist(o);
+        em.flush();
+    }
+
+    public void persistPassenger(Passenger[] passengers) {
+        for (Passenger p : passengers){
+            em.getTransaction().begin();
+            PassengerEntity pe = new PassengerEntity();
+            pe.setFirstName(p.getFirstName());
+            pe.setLastName(p.getLastName());
+            persist(pe);
+            em.getTransaction().commit();
+        }
     }
 }

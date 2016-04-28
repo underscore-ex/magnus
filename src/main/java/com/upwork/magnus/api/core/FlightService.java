@@ -77,7 +77,6 @@ public class FlightService implements BaseService {
                 Flights f = new Flights();
                 f.setFlightID(fe.getFlightInstanceId());
                 f.setNumberOfSeats(fe.getAvailableSeats());
-                f.setAirline(fe.getFlight().getAirline().getName());
                 f.setDate(Util.javaSqlTimeStampToString(fe.getDate()));
                 if (fe.getReservation() != null && fe.getReservation().size() > 0) {
                     f.setTotalPrice(fe.getReservation().get(0).getTotalPrice().doubleValue());
@@ -87,6 +86,10 @@ public class FlightService implements BaseService {
                 f.setDestination(fe.getDestinationAirport().getIataCode());
                 f.setFlightNumber(fe.getFlight().getFlightNumber());
                 flights[count++] = f;
+
+                if (flightDetail.getAirline() == null){
+                    flightDetail.setAirline(fe.getFlight().getAirline().getName());
+                }
             }
         }
     }

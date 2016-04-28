@@ -4,7 +4,6 @@ package com.upwork.magnus.model;
  * Created by ali on 2016-04-21.
  */
 public class Flights {
-    private String airline;
     private String date;
     private int numberOfSeats;
     private double totalPrice;
@@ -76,13 +75,5 @@ public class Flights {
 
     public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
-    }
-
-    public String getAirline() {
-        return airline;
-    }
-
-    public void setAirline(String airline) {
-        this.airline = airline;
     }
 }

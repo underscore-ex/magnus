@@ -88,9 +88,9 @@ public class PersistenceHelper {
     //Ugly implementation. Should be changed to follow parent/child persistence mechanism
     public ReservationEntity persistReservation(ReservationRequest reservationRequest) {
         ReservationEntity re = new ReservationEntity();
-        re.setTotalPrice(new BigDecimal(123));
-        re.setFlightInstance(getFlightInstanceEntity(reservationRequest.getFlightId()));
 
+        re.setFlightInstance(getFlightInstanceEntity(reservationRequest.getFlightId()));
+        re.setTotalPrice(new BigDecimal(re.getFlightInstance().getPrice().intValue() * reservationRequest.getNumberOfSeats()));
         em.getTransaction().begin();
         em.persist(re);
         em.flush();

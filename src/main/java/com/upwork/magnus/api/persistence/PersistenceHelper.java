@@ -5,9 +5,13 @@ import com.upwork.magnus.entity.FlightInstanceEntity;
 import com.upwork.magnus.entity.PassengerEntity;
 import com.upwork.magnus.entity.ReservationEntity;
 import com.upwork.magnus.model.Passenger;
+import com.upwork.magnus.model.ReservationRequest;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -79,5 +83,34 @@ public class PersistenceHelper {
             persist(pe);
             em.getTransaction().commit();
         }
+    }
+
+    //Ugly implementation. Should be changed to follow parent/child persistence mechanism
+    public ReservationEntity persistReservation(ReservationRequest reservationRequest) {
+        ReservationEntity re = new ReservationEntity();
+        re.setTotalPrice(new BigDecimal(123));
+        re.setFlightInstance(getFlightInstanceEntity(reservationRequest.getFlightId()));
+
+        em.getTransaction().begin();
+        em.persist(re);
+        em.flush();
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        for (Passenger p : reservationRequest.getPassengers()){
+            PassengerEntity pe = new PassengerEntity();
+            pe.setFirstName(p.getFirstName());
+            pe.setLastName(p.getLastName());
+            pe.setReservation(re);
+            em.persist(pe);
+            em.flush();
+        }
+        em.getTransaction().commit();
+
+        return re;
+    }
+
+    private FlightInstanceEntity getFlightInstanceEntity(int pk){
+        return em.find(FlightInstanceEntity.class, pk);
     }
 }

@@ -77,11 +77,13 @@ public class AirportEntity {
         this.city = city;
     }
 
-    @OneToMany(fetch=FetchType.LAZY)
-    @JoinColumn(name="flightId")
-    private List<FlightEntity> flight;
-    public void setFlight(List<FlightEntity> flight){this.flight = flight;}
-    public List<FlightEntity> getFlight(){return this.flight;}
+//    @OneToMany(fetch=FetchType.LAZY)
+//    @JoinColumn(name="flightId")
+//    private List<FlightEntity> flight;
+//    public void setFlight(List<FlightEntity> flight){this.flight = flight;}
+//    public List<FlightEntity> getFlight(){return this.flight;}
+//
+
 
     @Override
     public boolean equals(Object o) {
@@ -95,8 +97,7 @@ public class AirportEntity {
         if (timeZone != null ? !timeZone.equals(that.timeZone) : that.timeZone != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        return !(flight != null ? !flight.equals(that.flight) : that.flight != null);
+        return !(city != null ? !city.equals(that.city) : that.city != null);
 
     }
 
@@ -108,7 +109,6 @@ public class AirportEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (flight != null ? flight.hashCode() : 0);
         return result;
     }
 }

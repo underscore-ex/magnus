@@ -11,8 +11,6 @@ public class ReservationResponse {
     private int flightTime;
     private int numberOfSeats;
     private String reserveeName;
-    private String reservePhone;
-    private String reserveeEmail;
     private Passenger[] passengers;
 
     public int getFlightID() {
@@ -69,22 +67,6 @@ public class ReservationResponse {
 
     public void setReserveeName(String reserveeName) {
         this.reserveeName = reserveeName;
-    }
-
-    public String getReservePhone() {
-        return reservePhone;
-    }
-
-    public void setReservePhone(String reservePhone) {
-        this.reservePhone = reservePhone;
-    }
-
-    public String getReserveeEmail() {
-        return reserveeEmail;
-    }
-
-    public void setReserveeEmail(String reserveeEmail) {
-        this.reserveeEmail = reserveeEmail;
     }
 
     public Passenger[] getPassengers() {

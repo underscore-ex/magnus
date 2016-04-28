@@ -6,9 +6,7 @@ import com.upwork.magnus.entity.FlightInstanceEntity;
 import com.upwork.magnus.model.FlightDetail;
 import com.upwork.magnus.model.FlightError;
 import com.upwork.magnus.model.Flights;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import javax.persistence.EntityManager;
@@ -59,6 +57,7 @@ public class FlightService implements BaseService {
     public void process() {
         PersistenceHelper ph = new PersistenceHelper(em);
         java.sql.Timestamp ts = new java.sql.Timestamp(dateTime.toDateTime().getMillis());
+//        java.sql.Time time = new java.sql.Time()
         List<FlightInstanceEntity> flightInstance = null;
         if (isDestinationSet){
             flightInstance = ph.getFlightInstance(fromIataCode, toIataCode, ts, noOfTickets);

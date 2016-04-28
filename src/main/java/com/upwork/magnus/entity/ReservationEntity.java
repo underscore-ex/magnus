@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "reservation", schema = "", catalog = "magnus")
 public class ReservationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservationId")
     private int reservationId;
     private BigDecimal totalPrice;
 
@@ -21,7 +21,6 @@ public class ReservationEntity {
     public int getReservationId() {
         return reservationId;
     }
-
     public void setReservationId(int reservationId) {
         this.reservationId = reservationId;
     }
@@ -35,11 +34,17 @@ public class ReservationEntity {
         this.totalPrice = totalPrice;
     }
 
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="passengerId")
     private List<PassengerEntity> passenger;
     public void setPassenger(List<PassengerEntity> passenger){this.passenger = passenger;}
     public List<PassengerEntity> getPassenger(){return this.passenger;}
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="flightInstanceId")
+    private FlightInstanceEntity flightInstance;
+    public void setFlightInstance(FlightInstanceEntity flightInstance){this.flightInstance = flightInstance;}
+    public FlightInstanceEntity getFlightInstance(){return this.flightInstance;}
 
     @Override
     public boolean equals(Object o) {

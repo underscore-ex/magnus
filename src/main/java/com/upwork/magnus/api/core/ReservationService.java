@@ -1,6 +1,8 @@
 package com.upwork.magnus.api.core;
 
 import com.upwork.magnus.api.persistence.PersistenceHelper;
+import com.upwork.magnus.entity.AirportEntity;
+import com.upwork.magnus.entity.FlightInstanceEntity;
 import com.upwork.magnus.entity.ReservationEntity;
 import com.upwork.magnus.model.FlightError;
 import com.upwork.magnus.model.ReservationResponse;
@@ -19,6 +21,7 @@ public class ReservationService implements BaseService {
     private final EntityManager em;
     private FlightError fe;
     private ReservationResponse reservationResponse;
+    private ReservationEntity re;
 
     public ReservationService(EntityManager em, ReservationRequest reservationRequest){
         this.em = em;
@@ -30,8 +33,7 @@ public class ReservationService implements BaseService {
 
     public void process(){
         PersistenceHelper ph = new PersistenceHelper(em);
-        ReservationEntity re = ph.persistReservation();
-        ph.persistPassenger(reservationRequest.getPassengers());
+        re = ph.persistReservation(reservationRequest);
     }
 
     public Response response() {
@@ -42,10 +44,32 @@ public class ReservationService implements BaseService {
                     .build();
         } else {
             return Response.status(Response.Status.OK)
-                    .entity(reservationResponse)
+                    .entity(convertDomainToModel())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         }
 
+    }
+
+    //A generic conversion framework should be created if this project
+    //goes beyond 2 services.
+    private ReservationResponse convertDomainToModel() {
+        ReservationResponse response = new ReservationResponse();
+        response.setFlightID(reservationRequest.getFlightId());
+
+        FlightInstanceEntity flightInstance = re.getFlightInstance();
+        AirportEntity originAirport = flightInstance.getOriginAirport();
+        response.setOrigin(originAirport.getName() + " (" +originAirport.getIataCode()+")");
+
+        AirportEntity destinationAirport = flightInstance.getDestinationAirport();
+        response.setDestination(destinationAirport.getName() + " (" +destinationAirport.getIataCode()+")");
+
+        response.setDate(Util.javaSqlTimeStampToString(flightInstance.getDate()));
+        response.setFlightTime(flightInstance.getFlight().getFlightTime());
+        response.setNumberOfSeats(reservationRequest.getNumberOfSeats());
+        response.setReserveeName(reservationRequest.getReserveeName());
+        response.setPassengers(reservationRequest.getPassengers());
+
+        return response;
     }
 }

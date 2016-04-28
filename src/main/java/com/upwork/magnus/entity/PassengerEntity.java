@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "passenger", schema = "", catalog = "magnus")
 public class PassengerEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "passengerId")
     private int passengerId;
     private String firstName;
     private String lastName;
@@ -19,7 +19,6 @@ public class PassengerEntity {
     public int getPassengerId() {
         return passengerId;
     }
-
     public void setPassengerId(int passengerId) {
         this.passengerId = passengerId;
     }
@@ -29,7 +28,6 @@ public class PassengerEntity {
     public String getFirstName() {
         return firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -39,10 +37,16 @@ public class PassengerEntity {
     public String getLastName() {
         return lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="reservationId")
+    private ReservationEntity reservation;
+    public void setReservation(ReservationEntity reservation){this.reservation = reservation;}
+    public ReservationEntity getReservation(){return this.reservation;}
+
 
     @Override
     public boolean equals(Object o) {

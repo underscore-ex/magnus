@@ -7,9 +7,9 @@ CREATE TABLE `magnus`.`airline` (
 
 CREATE TABLE `magnus`.`flight` (
   `flightId` INT NOT NULL AUTO_INCREMENT,
-  `flightNumber` INT NOT NULL,
+  `flightNumber` VARCHAR(45) NOT NULL,
   `seats` INT NOT NULL,
-  `flightTime` DATETIME NOT NULL,
+  `flightTime` INT NOT NULL,
   `airlineId` INT NOT NULL,
   PRIMARY KEY (`flightId`),
   UNIQUE INDEX `flightId_UNIQUE` (`flightId` ASC),
@@ -23,18 +23,11 @@ CREATE TABLE `magnus`.`flight` (
 CREATE TABLE `magnus`.`airport` (
   `airportId` INT NOT NULL AUTO_INCREMENT,
   `IATACode` VARCHAR(45) NOT NULL,
-  `timeZone` VARCHAR(45) NOT NULL COMMENT 'Offset in hours * 100',
+  `timeZone` INT NOT NULL COMMENT 'Offset in MINUTES',
   `name` VARCHAR(200) NOT NULL,
   `country` VARCHAR(45) NOT NULL,
   `city` VARCHAR(45) NOT NULL,
-  `flightId` INT NOT NULL,
-  PRIMARY KEY (`airportId`),
-  INDEX `flightId_idx` (`flightId` ASC),
-  CONSTRAINT `flightId`
-    FOREIGN KEY (`flightId`)
-    REFERENCES `magnus`.`flight` (`flightId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+  PRIMARY KEY (`airportId`));
 
 CREATE TABLE `magnus`.`flight_instance`(
 	`flightInstanceId` INT NOT NULL AUTO_INCREMENT,
@@ -43,13 +36,27 @@ CREATE TABLE `magnus`.`flight_instance`(
 	`time` TIME NOT NULL,
 	`availableSeats` INT NOT NULL,
 	`price` DECIMAL(20,2) NOT NULL DEFAULT 0,
+    `originAirport` INT NOT NULL,
+    `destinationAirport` INT NOT NULL,
 	PRIMARY KEY (`flightInstanceId`), 
 	INDEX `flightId_idx` (`flightId` ASC),
+    INDEX `originAirport_idx` (`originAirport` ASC),
+    INDEX `destinationAirport_idx` (`destinationAirport` ASC),
 	CONSTRAINT `flight_instance_flightId`
 		FOREIGN KEY (`flightId`)
 		REFERENCES `magnus`.`flight`(`flightId`)
 		ON DELETE NO ACTION
-		ON UPDATE NO ACTION);
+		ON UPDATE NO ACTION,
+    CONSTRAINT `flight_instance_originAirport`
+		FOREIGN KEY (`originAirport`)
+        REFERENCES `magnus`.`airport`(`airportId`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+	CONSTRAINT `flight_instance_destinationAirport`
+		FOREIGN KEY (`destinationAirport`)
+        REFERENCES `magnus`.`airport`(`airportId`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);
 
 CREATE TABLE `magnus`.`reservation`(
 	`reservationId` INT NOT NULL AUTO_INCREMENT,

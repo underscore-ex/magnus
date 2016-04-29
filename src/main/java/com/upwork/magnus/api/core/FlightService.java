@@ -76,7 +76,7 @@ public class FlightService implements BaseService {
                 Flights f = new Flights();
                 f.setFlightID(fe.getFlightInstanceId());
                 f.setNumberOfSeats(noOfTickets);
-                f.setDate(Util.sqlTimetampeToOffsetDateTime(fe.getDate()).toString());
+                f.setDate(Util.sqlTimestampToOffsetDateTime(fe.getDate(), fe.getOriginAirport().getTimeZone()).toString());
                 f.setTotalPrice(fe.getPrice().multiply(new BigDecimal(noOfTickets)).doubleValue());
                 f.setTravelTime(fe.getFlight().getFlightTime());
                 f.setOrigin(fe.getOriginAirport().getIataCode());
@@ -116,6 +116,9 @@ public class FlightService implements BaseService {
             return false;
         } else {
             try {
+                if (date.length() <= 19){
+                    date = date + "+00:00";
+                }
                 dateTime = OffsetDateTime.parse(date);
             } catch (Exception e) {
                 fe = new FlightError(Response.Status.BAD_REQUEST.getStatusCode(), 3, "Invalid ISO8601 date");

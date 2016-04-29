@@ -26,4 +26,13 @@ public class FlightError implements Serializable{
     }
 
     public int getErrorCode() { return errorCode;}
+
+    @Override
+    public String toString() {
+        return "FlightError{" +
+                "httpError=" + httpError +
+                ", errorCode=" + errorCode +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

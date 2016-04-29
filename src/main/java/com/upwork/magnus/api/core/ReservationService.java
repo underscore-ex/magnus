@@ -64,7 +64,7 @@ public class ReservationService implements BaseService {
         AirportEntity destinationAirport = flightInstance.getDestinationAirport();
         response.setDestination(destinationAirport.getName() + " (" +destinationAirport.getIataCode()+")");
 
-        response.setDate(Util.sqlTimetampeToOffsetDateTime(flightInstance.getDate()).toString());
+        response.setDate(Util.sqlTimestampToOffsetDateTime(flightInstance.getDate(), originAirport.getTimeZone()).toString());
         response.setFlightTime(flightInstance.getFlight().getFlightTime());
         response.setNumberOfSeats(reservationRequest.getNumberOfSeats());
         response.setReserveeName(reservationRequest.getReserveeName());

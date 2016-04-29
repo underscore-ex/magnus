@@ -16,6 +16,7 @@ public class RequestProcessor<T extends BaseService, O> {
             }
             return service.response();
         } catch (Exception e){
+            e.printStackTrace();
             FlightError fe = new FlightError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), 10, e.getMessage());
             return buildErrorResponse(fe);
         }

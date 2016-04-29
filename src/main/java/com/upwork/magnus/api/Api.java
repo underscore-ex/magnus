@@ -39,6 +39,8 @@ public class Api {
     @Path("/flights/{from}/{date}/{tickets}")
     @Produces("application/json")
     public Response getTicketsByOrigin(@PathParam("from") String from, @PathParam("date") String date, @PathParam("tickets") String tickets) {
+        System.out.printf("API service %s called with parameters from: %s, date: %s, tickets: %s", "/flights/{from}/{date}/{tickets}", from, date, tickets);
+        System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, date, tickets);
         RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
@@ -48,6 +50,8 @@ public class Api {
     @GET
     @Path("/flights/{from}/{to}/{date}/{tickets}")
     public Response getTicketsByOriginAndDestination(@PathParam("from") String from, @PathParam("to") String to, @PathParam("date") String date, @PathParam("tickets") String tickets) {
+        System.out.printf("API service %s called with parameters from: %s, to: %s, date: %s, tickets: %s", "/flights/{from}/{to}/{date}/{tickets}", from, to, date, tickets);
+        System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, to, date, tickets);
         RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
@@ -59,7 +63,8 @@ public class Api {
     @Consumes("application/json")
     @Produces("application/json")
     public Response makeReservation(@PathParam("flightId") String flightId, ReservationRequest reservationRequest) {
-        System.out.println(reservationRequest.toString());
+        System.out.printf("API service %s called with request body > %s", "/reservation/{flightId}", reservationRequest.toString());
+        System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         ReservationService rs = new ReservationService(em, reservationRequest);
         RequestProcessor<ReservationService, ReservationResponse> rp = new RequestProcessor<>();
@@ -69,8 +74,12 @@ public class Api {
     @GET
     @Path("/loaddata")
     public Response loadData() throws IOException {
+        System.out.printf("API service %s called", "/loaddata");
+        System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
+        System.out.println("EntityManager fetched successfully");
         DataService ds = new DataService(em, Api.class.getClassLoader());
+        System.out.println("DataService created successfully");
         RequestProcessor<DataService, DataResponse> rp = new RequestProcessor<>();
         return rp.process(ds);
     }

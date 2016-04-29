@@ -36,6 +36,8 @@ public class DataService implements BaseService {
         airportsDataPath = classLoader.getResource(AIRPORTDATA_FILE_NAME).getPath();
         flightsDataPath = classLoader.getResource(FLIGHTDATA_FILE_NAME).getPath();
 
+        System.out.printf("AirportsDataPath [%s] flightsDataPath [%s]", airportsDataPath, flightsDataPath);
+        System.out.println();
         ph = new PersistenceHelper(em);
         util = new Util();
     }
@@ -43,35 +45,54 @@ public class DataService implements BaseService {
     @Override
     public boolean validate() {
         if (flightsDataPath == null || flightsDataPath.isEmpty()) {
+            System.out.printf("flightsData path is invalid");
+            System.out.println();
             fe = new FlightError(404, 11, "Flights test data not found");
         }
         if (airportsDataPath == null || airportsDataPath.isEmpty()) {
+            System.out.printf("airportsData path is invalid");
+            System.out.println();
             fe = new FlightError(404, 11, "Airports test data not found");
         }
-
+        System.out.printf("Validated");
+        System.out.println();
         return true;
     }
 
     @Override
     public void process() {
         try {
+            System.out.printf("Loading airline data");
+            System.out.println();
             AirlineEntity ae = loadAirline();
+
+            System.out.printf("Loading airports data");
+            System.out.println();
             loadAirports();
+
+            System.out.printf("Loading flights");
+            System.out.println();
             loadFlights(ae);
         } catch (Exception e) {
+            e.printStackTrace();
             fe = new FlightError(10, 500, "Error loading test data");
         }
     }
 
     private void loadFlights(AirlineEntity ae) throws IOException {
         String jsonData = util.readJson(flightsDataPath);
+        System.out.printf("flights data loaded successfully from %s", flightsDataPath);
+        System.out.println();
 
         JSONObject obj = new JSONObject(jsonData);
         JSONArray flights = obj.getJSONArray("flights");
+        System.out.printf("%d flights loaded from file. Will be persisting them now", flights.length());
+        System.out.println();
 
         for (int index = 0; index < flights.length(); index++) {
             JSONObject flight = flights.getJSONObject(index);
             FlightEntity fe = loadAndSaveFlight(ae, flight);
+
             loadAndSaveFlightInstance(fe, flight);
         }
     }
@@ -81,8 +102,15 @@ public class DataService implements BaseService {
         int repeatInterval = flight.getInt("repeatInterval");
         int noOfRepeats = flight.getInt("noOfRepeats");
 
-        LocalDateTime date = LocalDateTime.parse(flight.getString("date"));
+        System.out.printf("flight_instances will be created for %s", fe.toString());
+        System.out.printf("repeatType: %s, repeatInterval: %d, noOfRepeats: %d ", repeatType, repeatInterval, noOfRepeats);
+        System.out.println();
 
+        LocalDateTime date = LocalDateTime.parse(flight.getString("date"));
+        System.out.printf("First flight will be created for %s", date.toString());
+        System.out.println();
+
+        int count = 0;
 
         for (int i = 0; i < noOfRepeats; i++) {
             try {
@@ -97,14 +125,20 @@ public class DataService implements BaseService {
                 if (repeatType.equalsIgnoreCase("days")) {
                     date = date.plusDays(repeatInterval);
                 }
+                count++;
             } catch (Exception e) {
-                System.err.printf("Error saving FlightInstance. Exception message : %s", e.getMessage());
+                e.printStackTrace();
+                System.out.printf("Error saving FlightInstance. Exception message : %s", e.getMessage());
             }
         }
+        System.out.printf("%d flight_instances were created", count);
+        System.out.println();
     }
 
 
     private FlightEntity loadAndSaveFlight(AirlineEntity ae, JSONObject flight) {
+        System.out.printf("Persisting flight");
+        System.out.println();
         FlightEntity fe = new FlightEntity();
         fe.setFlightNumber(flight.getString("flightNumber"));
         fe.setSeats(flight.getInt("seats"));
@@ -112,8 +146,12 @@ public class DataService implements BaseService {
         fe.setAirline(ae);
         FlightEntity existingEntity = ph.getFlightEntity(fe.getFlightNumber(), fe.getFlightTime());
         if (existingEntity == null) {
+            System.out.printf("%s doesn't exist. Will be persiting now", fe.toString());
+            System.out.println();
             ph.persist(fe);
         } else {
+            System.out.printf("%s already existing with id %d ", fe.toString(), existingEntity.getFlightId());
+            System.out.println();
             fe.setFlightId(existingEntity.getFlightId());
         }
         return fe;
@@ -121,9 +159,14 @@ public class DataService implements BaseService {
 
     private void loadAirports() throws IOException {
         String jsonData = util.readJson(airportsDataPath);
+        System.out.printf("Airports data loaded successfully from %s", airportsDataPath);
+        System.out.println();
+        int count = 0;
 
         JSONObject obj = new JSONObject(jsonData);
         JSONArray airports = obj.getJSONArray("airports");
+        System.out.printf("%d no of airports found in data. Will be persisting them now", airports.length());
+        System.out.println();
 
         for (int index = 0; index < airports.length(); index++) {
             JSONObject jsonAirport = airports.getJSONObject(index);
@@ -135,18 +178,28 @@ public class DataService implements BaseService {
                 ae.setName(jsonAirport.getString("name"));
                 ae.setTimeZone(jsonAirport.getString("timezone"));
                 ph.persist(ae);
+                count++;
             } catch (Exception e) {
+                System.out.printf("Error persisting airport");
+                System.out.println();
+                e.printStackTrace();
                 System.out.println("Skipping " + ae.getIataCode() + " because of exception " + e.getMessage());
             }
         }
+        System.out.printf("%d airports have been persisted", count);
+        System.out.println();
     }
 
     private AirlineEntity loadAirline() {
         AirlineEntity ae = ph.getAirlineEntity(defaultAirline);
         if (ae == null) {
+            System.out.printf("Default airline %s doesn't exist. Creating a new one", defaultAirline);
+            System.out.println();
             ae = new AirlineEntity();
             ae.setName(defaultAirline);
             ph.persist(ae);
+            System.out.printf("Airline %s persisted", ae.toString());
+            System.out.println();
         }
         return ae;
     }
@@ -154,11 +207,15 @@ public class DataService implements BaseService {
     @Override
     public Response response() {
         if (fe != null) {
+            System.out.printf("There seems to be an error. Returning %d response with message %s", fe.getHttpError(), fe.toString());
+            System.out.println();
             return Response.status(fe.getHttpError())
                     .entity(fe)
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } else {
+            System.out.printf("Successful response generated with status code");
+            System.out.println();
             return Response.status(Response.Status.OK)
                     .entity(new DataResponse("Test data loaded successfully"))
                     .type(MediaType.APPLICATION_JSON)

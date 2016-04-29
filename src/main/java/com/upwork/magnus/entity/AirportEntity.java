@@ -78,14 +78,6 @@ public class AirportEntity {
         this.city = city;
     }
 
-//    @OneToMany(fetch=FetchType.LAZY)
-//    @JoinColumn(name="flightId")
-//    private List<FlightEntity> flight;
-//    public void setFlight(List<FlightEntity> flight){this.flight = flight;}
-//    public List<FlightEntity> getFlight(){return this.flight;}
-//
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

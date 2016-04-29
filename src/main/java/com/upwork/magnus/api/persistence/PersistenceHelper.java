@@ -27,16 +27,6 @@ public class PersistenceHelper {
                 .getResultList();
     }
 
-    public List<AirportEntity> getAirportsFlights(String fromIataCode, Timestamp ts){
-        String query = "SELECT a FROM AirportEntity a " +
-                "JOIN a.flight f " +
-                "JOIN f.airline ae WHERE a.iataCode = :iataCode AND f.flightTime = :flightTime";
-        return em.createQuery(query)
-                .setParameter("iataCode", fromIataCode)
-                .setParameter("flightTime", ts)
-                .getResultList();
-    }
-
     public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, Timestamp date, int tickets){
         return em.createQuery(
                 "SELECT f FROM FlightInstanceEntity f " +
@@ -128,5 +118,16 @@ public class PersistenceHelper {
 
     public AirlineEntity getAirlineEntity (int pk){
         return em.find(AirlineEntity.class, pk);
+    }
+
+    public AirlineEntity getAirlineEntity(String defaultAirline) {
+        List result = em.createQuery("SELECT a FROM AirlineEntity a " +
+                "WHERE a.name = :airlineName")
+                .setParameter("airlineName", defaultAirline)
+                .getResultList();
+        if (result != null && result.size() >= 1){
+            return (AirlineEntity)result.get(0);
+        }
+        return null;
     }
 }

@@ -27,6 +27,7 @@ public class DataService implements BaseService {
     private String airportsDataPath;
     private String flightsDataPath;
     private FlightError fe;
+    private String defaultAirline = "MULANO Airline";
 
     private String AIRPORTDATA_FILE_NAME = "airports.json";
     private String FLIGHTDATA_FILE_NAME = "flights.json";
@@ -141,9 +142,11 @@ public class DataService implements BaseService {
     }
 
     private AirlineEntity loadAirline() {
-        AirlineEntity ae = new AirlineEntity();
-        ae.setName("MULANO Airline");
-        ph.persist(ae);
+        AirlineEntity ae = ph.getAirlineEntity(defaultAirline);
+        if (ae == null) {
+            ae.setName(defaultAirline);
+            ph.persist(ae);
+        }
         return ae;
     }
 

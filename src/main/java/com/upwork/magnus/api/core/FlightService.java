@@ -6,12 +6,12 @@ import com.upwork.magnus.entity.FlightInstanceEntity;
 import com.upwork.magnus.model.FlightDetail;
 import com.upwork.magnus.model.FlightError;
 import com.upwork.magnus.model.Flights;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.ISODateTimeFormat;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class FlightService implements BaseService {
     private FlightError fe = null;
     private String date;
     private String tickets;
-    private LocalDateTime dateTime;
+    private OffsetDateTime dateTime;
     private int noOfTickets;
     private String toIataCode;
     private boolean isDestinationSet;
@@ -56,18 +56,17 @@ public class FlightService implements BaseService {
 
     public void process() {
         PersistenceHelper ph = new PersistenceHelper(em);
-        java.sql.Timestamp ts = new java.sql.Timestamp(dateTime.toDateTime().getMillis());
-//        java.sql.Time time = new java.sql.Time()
+        java.sql.Timestamp ts = Util.offsetDateTimeToSql(dateTime);
         List<FlightInstanceEntity> flightInstance = null;
         if (isDestinationSet){
             flightInstance = ph.getFlightInstance(fromIataCode, toIataCode, ts, noOfTickets);
         } else {
             flightInstance = ph.getFlightInstance(fromIataCode, ts, noOfTickets);
         }
-        convert(flightInstance);
+        convert(flightInstance, noOfTickets);
     }
 
-    private void convert(List<FlightInstanceEntity> flightInstanceEntites) {
+    private void convert(List<FlightInstanceEntity> flightInstanceEntites, int noOfTickets) {
         if (flightInstanceEntites != null && flightInstanceEntites.size() > 0) {
             flightDetail = new FlightDetail();
             Flights[] flights = new Flights[flightInstanceEntites.size()];
@@ -76,11 +75,9 @@ public class FlightService implements BaseService {
             for (FlightInstanceEntity fe : flightInstanceEntites) {
                 Flights f = new Flights();
                 f.setFlightID(fe.getFlightInstanceId());
-                f.setNumberOfSeats(fe.getAvailableSeats());
-                f.setDate(Util.javaSqlTimeStampToString(fe.getDate()));
-                if (fe.getReservation() != null && fe.getReservation().size() > 0) {
-                    f.setTotalPrice(fe.getReservation().get(0).getTotalPrice().doubleValue());
-                }
+                f.setNumberOfSeats(noOfTickets);
+                f.setDate(Util.sqlTimetampeToOffsetDateTime(fe.getDate()).toString());
+                f.setTotalPrice(fe.getPrice().multiply(new BigDecimal(noOfTickets)).doubleValue());
                 f.setTravelTime(fe.getFlight().getFlightTime());
                 f.setOrigin(fe.getOriginAirport().getIataCode());
                 f.setDestination(fe.getDestinationAirport().getIataCode());
@@ -119,7 +116,7 @@ public class FlightService implements BaseService {
             return false;
         } else {
             try {
-                dateTime = LocalDateTime.parse(date, ISODateTimeFormat.dateTime());
+                dateTime = OffsetDateTime.parse(date);
             } catch (Exception e) {
                 fe = new FlightError(Response.Status.BAD_REQUEST.getStatusCode(), 3, "Invalid ISO8601 date");
                 return false;

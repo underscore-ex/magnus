@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "airport", schema = "", catalog = "magnus")
 public class AirportEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "airportId")
     private int airportId;
     private String iataCode;
     private String timeZone;

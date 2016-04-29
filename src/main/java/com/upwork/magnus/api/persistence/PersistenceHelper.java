@@ -1,9 +1,6 @@
 package com.upwork.magnus.api.persistence;
 
-import com.upwork.magnus.entity.AirportEntity;
-import com.upwork.magnus.entity.FlightInstanceEntity;
-import com.upwork.magnus.entity.PassengerEntity;
-import com.upwork.magnus.entity.ReservationEntity;
+import com.upwork.magnus.entity.*;
 import com.upwork.magnus.model.Passenger;
 import com.upwork.magnus.model.ReservationRequest;
 
@@ -70,8 +67,10 @@ public class PersistenceHelper {
     }
 
     public void persist (Object o){
+        em.getTransaction().begin();
         em.persist(o);
         em.flush();
+        em.getTransaction().commit();
     }
 
     public void persistPassenger(Passenger[] passengers) {
@@ -112,5 +111,22 @@ public class PersistenceHelper {
 
     private FlightInstanceEntity getFlightInstanceEntity(int pk){
         return em.find(FlightInstanceEntity.class, pk);
+    }
+
+    public FlightEntity getFlightEntity (String flightNumber, int flightTime){
+        List result = em.createQuery("SELECT f from FlightEntity f " +
+                "WHERE f.flightNumber = :flightNumber " +
+                "AND f.flightTime = :flightTime")
+                .setParameter("flightNumber", flightNumber)
+                .setParameter("flightTime", flightTime)
+                .getResultList();
+        if (result != null && result.size() >= 1){
+            return (FlightEntity)result.get(0);
+        }
+        return null;
+    }
+
+    public AirlineEntity getAirlineEntity (int pk){
+        return em.find(AirlineEntity.class, pk);
     }
 }

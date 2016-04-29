@@ -23,7 +23,7 @@ CREATE TABLE `magnus`.`flight` (
 CREATE TABLE `magnus`.`airport` (
   `airportId` INT NOT NULL AUTO_INCREMENT,
   `IATACode` VARCHAR(45) NOT NULL,
-  `timeZone` INT NOT NULL COMMENT 'Offset in MINUTES',
+  `timeZone` VARCHAR(45) NOT NULL COMMENT 'Offset in MINUTES',
   `name` VARCHAR(200) NOT NULL,
   `country` VARCHAR(45) NOT NULL,
   `city` VARCHAR(45) NOT NULL,
@@ -33,7 +33,6 @@ CREATE TABLE `magnus`.`flight_instance`(
 	`flightInstanceId` INT NOT NULL AUTO_INCREMENT,
 	`flightId` INT NOT NULL,
 	`date` DATETIME NOT NULL,
-	`time` TIME NOT NULL,
 	`availableSeats` INT NOT NULL,
 	`price` DECIMAL(20,2) NOT NULL DEFAULT 0,
     `originAirport` INT NOT NULL,

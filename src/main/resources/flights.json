@@ -1,0 +1,65 @@
+{
+  "flights":[
+    {
+      "destination": "LHR",
+      "origin": "CPH",
+      "flightNumber": "SAS 505",
+      "seats": 200,
+      "flightTime": 120,
+      "date": "2016-05-02T15:00:00",
+      "price": 361.97,
+      "noOfRepeats": 20,
+      "repeatType": "days",
+      "repeatInterval": 7
+    },
+    {
+      "destination": "VIE",
+      "origin": "STN",
+      "flightNumber": "Austrian Airlines 8852",
+      "seats": 200,
+      "flightTime": 125,
+      "date": "2016-05-09T14:55:00",
+      "price": 273.47,
+      "noOfRepeats": 20,
+      "repeatType": "days",
+      "repeatInterval": 7
+    },
+    {
+      "destination": "CDG",
+      "origin": "CPH",
+      "flightNumber": "AF 1351",
+      "seats": 200,
+      "flightTime": 120,
+      "date": "2016-05-09T06:50:00",
+      "price": 388.71,
+      "noOfRepeats": 20,
+      "repeatType": "days",
+      "repeatInterval": 7
+    },
+    {
+      "destination": "ZRH",
+      "origin": "CPH",
+      "flightNumber": "LX 1273",
+      "seats": 200,
+      "flightTime": 105,
+      "date": "2016-05-09T08:00:00",
+      "price": 295.12,
+      "noOfRepeats": 20,
+      "repeatType": "days",
+      "repeatInterval": 7
+    },
+    {
+      "destination": "ZRH",
+      "origin": "CPH",
+      "flightNumber": "LX 4701",
+      "seats": 200,
+      "flightTime": 105,
+      "date": "2016-05-09T07:55:00",
+      "price": 732.47,
+      "noOfRepeats": 20,
+      "repeatType": "days",
+      "repeatInterval": 7
+    }
+
+  ]
+}

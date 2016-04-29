@@ -1,16 +1,34 @@
 package com.upwork.magnus.api;
 
+import com.upwork.magnus.api.core.DataService;
 import com.upwork.magnus.api.core.FlightService;
 import com.upwork.magnus.api.core.RequestProcessor;
 import com.upwork.magnus.api.core.ReservationService;
 import com.upwork.magnus.api.persistence.LocalEntityManagerFactory;
+import com.upwork.magnus.api.persistence.PersistenceHelper;
+import com.upwork.magnus.entity.AirlineEntity;
+import com.upwork.magnus.entity.AirportEntity;
+import com.upwork.magnus.entity.FlightEntity;
+import com.upwork.magnus.entity.FlightInstanceEntity;
+import com.upwork.magnus.model.DataResponse;
 import com.upwork.magnus.model.FlightDetail;
 import com.upwork.magnus.model.ReservationRequest;
 import com.upwork.magnus.model.ReservationResponse;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.io.*;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by ali on 2016-04-21.
@@ -20,7 +38,7 @@ public class Api {
     @GET
     @Path("/flights/{from}/{date}/{tickets}")
     @Produces("application/json")
-    public Response getTicketsByOrigin(@PathParam("from") String from, @PathParam("date") String date, @PathParam("tickets") String tickets){
+    public Response getTicketsByOrigin(@PathParam("from") String from, @PathParam("date") String date, @PathParam("tickets") String tickets) {
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, date, tickets);
         RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
@@ -29,7 +47,7 @@ public class Api {
 
     @GET
     @Path("/flights/{from}/{to}/{date}/{tickets}")
-    public Response getTicketsByOriginAndDestination(@PathParam("from") String from, @PathParam("to") String to, @PathParam("date") String date, @PathParam("tickets") String tickets){
+    public Response getTicketsByOriginAndDestination(@PathParam("from") String from, @PathParam("to") String to, @PathParam("date") String date, @PathParam("tickets") String tickets) {
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, to, date, tickets);
         RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
@@ -40,11 +58,20 @@ public class Api {
     @Path("/reservation/{flightId}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response makeReservation(@PathParam("flightId") String flightId, ReservationRequest reservationRequest){
+    public Response makeReservation(@PathParam("flightId") String flightId, ReservationRequest reservationRequest) {
         System.out.println(reservationRequest.toString());
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         ReservationService rs = new ReservationService(em, reservationRequest);
         RequestProcessor<ReservationService, ReservationResponse> rp = new RequestProcessor<>();
         return rp.process(rs);
+    }
+
+    @GET
+    @Path("/loaddata")
+    public Response loadData() throws IOException {
+        EntityManager em = LocalEntityManagerFactory.createEntityManager();
+        DataService ds = new DataService(em, Api.class.getClassLoader());
+        RequestProcessor<DataService, DataResponse> rp = new RequestProcessor<>();
+        return rp.process(ds);
     }
 }

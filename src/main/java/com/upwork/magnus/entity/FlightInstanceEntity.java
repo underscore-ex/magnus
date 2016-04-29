@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "flight_instance", schema = "", catalog = "magnus")
 public class FlightInstanceEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "flightInstanceId")
     private int flightInstanceId;
     private Timestamp date;
     private int availableSeats;
@@ -103,5 +104,19 @@ public class FlightInstanceEntity {
         result = 31 * result + availableSeats;
         result = 31 * result + (price != null ? price.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "FlightInstanceEntity{" +
+                "flightInstanceId=" + flightInstanceId +
+                ", date=" + date +
+                ", availableSeats=" + availableSeats +
+                ", price=" + price +
+                ", flight=" + flight +
+                ", reservation=" + reservation +
+                ", originAirport=" + originAirport +
+                ", destinationAirport=" + destinationAirport +
+                '}';
     }
 }

@@ -144,6 +144,7 @@ public class DataService implements BaseService {
     private AirlineEntity loadAirline() {
         AirlineEntity ae = ph.getAirlineEntity(defaultAirline);
         if (ae == null) {
+            ae = new AirlineEntity();
             ae.setName(defaultAirline);
             ph.persist(ae);
         }

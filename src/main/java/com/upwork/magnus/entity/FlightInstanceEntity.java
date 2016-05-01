@@ -2,6 +2,7 @@ package com.upwork.magnus.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
@@ -15,7 +16,8 @@ public class FlightInstanceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "flightInstanceId")
     private int flightInstanceId;
-    private Timestamp date;
+    private Date date;
+    private Time time;
     private int availableSeats;
     private BigDecimal price;
 
@@ -30,13 +32,19 @@ public class FlightInstanceEntity {
 
     @Basic
     @Column(name = "date", nullable = false, insertable = true, updatable = true)
-    public Timestamp getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
+
+    @Basic
+    @Column(name = "time", nullable = false, insertable = true, updatable = true)
+    public Time getTime() { return time; }
+
+    public void setTime(Time time) { this.time = time; }
 
     @Basic
     @Column(name = "availableSeats", nullable = false, insertable = true, updatable = true)

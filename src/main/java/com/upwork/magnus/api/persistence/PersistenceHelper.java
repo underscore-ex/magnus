@@ -6,9 +6,7 @@ import com.upwork.magnus.model.ReservationRequest;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -27,7 +25,7 @@ public class PersistenceHelper {
                 .getResultList();
     }
 
-    public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, Timestamp date, int tickets){
+    public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, Date date, int tickets){
         return em.createQuery(
                 "SELECT f FROM FlightInstanceEntity f " +
                         "JOIN f.originAirport o " +
@@ -39,7 +37,7 @@ public class PersistenceHelper {
                 .getResultList();
     }
 
-    public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, String toIataCode, Timestamp date, int tickets){
+    public List<FlightInstanceEntity> getFlightInstance (String fromIataCode, String toIataCode, Date date, int tickets){
         String query = "SELECT f FROM FlightInstanceEntity f " +
                 "JOIN f.destinationAirport d " +
                 "JOIN f.originAirport a " +

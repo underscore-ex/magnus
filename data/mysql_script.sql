@@ -32,7 +32,8 @@ CREATE TABLE `magnus`.`airport` (
 CREATE TABLE `magnus`.`flight_instance`(
 	`flightInstanceId` INT NOT NULL AUTO_INCREMENT,
 	`flightId` INT NOT NULL,
-	`date` DATETIME NOT NULL,
+	`date` DATE NOT NULL,
+	`time` TIME NOT NULL,
 	`availableSeats` INT NOT NULL,
 	`price` DECIMAL(20,2) NOT NULL DEFAULT 0,
     `originAirport` INT NOT NULL,

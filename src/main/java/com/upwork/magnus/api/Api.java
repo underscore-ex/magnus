@@ -43,7 +43,7 @@ public class Api {
         System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, date, tickets);
-        RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
+        RequestProcessor<FlightService> rp = new RequestProcessor<>();
         return rp.process(fs);
     }
 
@@ -54,7 +54,7 @@ public class Api {
         System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         FlightService fs = new FlightService(em, from, to, date, tickets);
-        RequestProcessor<FlightService, FlightDetail> rp = new RequestProcessor<>();
+        RequestProcessor<FlightService> rp = new RequestProcessor<>();
         return rp.process(fs);
     }
 
@@ -67,7 +67,7 @@ public class Api {
         System.out.println();
         EntityManager em = LocalEntityManagerFactory.createEntityManager();
         ReservationService rs = new ReservationService(em, reservationRequest);
-        RequestProcessor<ReservationService, ReservationResponse> rp = new RequestProcessor<>();
+        RequestProcessor<ReservationService> rp = new RequestProcessor<>();
         return rp.process(rs);
     }
 
@@ -80,7 +80,7 @@ public class Api {
         System.out.println("EntityManager fetched successfully");
         DataService ds = new DataService(em, Api.class.getClassLoader());
         System.out.println("DataService created successfully");
-        RequestProcessor<DataService, DataResponse> rp = new RequestProcessor<>();
+        RequestProcessor<DataService> rp = new RequestProcessor<>();
         return rp.process(ds);
     }
 }

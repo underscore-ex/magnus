@@ -14,7 +14,8 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 /**
@@ -35,6 +36,9 @@ public class DataService implements BaseService {
     public DataService(EntityManager em, ClassLoader classLoader) {
         airportsDataPath = classLoader.getResource(AIRPORTDATA_FILE_NAME).getPath();
         flightsDataPath = classLoader.getResource(FLIGHTDATA_FILE_NAME).getPath();
+
+//        airportsDataPath = "C:/Users/Magnus/Dropbox (Schantz)/Privat/Skole/Git/magnus-master/target/api/WEB-INF/classes/flights.json";
+//        flightsDataPath = "C:/Users/Magnus/Dropbox (Schantz)/Privat/Skole/Git/magnus-master/target/api/WEB-INF/classes/airports.json";
 
         System.out.printf("AirportsDataPath [%s] flightsDataPath [%s]", airportsDataPath, flightsDataPath);
         System.out.println();
@@ -116,7 +120,8 @@ public class DataService implements BaseService {
             try {
                 FlightInstanceEntity fi = new FlightInstanceEntity();
                 fi.setAvailableSeats(flight.getInt("seats"));
-                fi.setDate(Timestamp.valueOf(date));
+                fi.setDate(Date.valueOf(date.toLocalDate()));
+                fi.setTime(Time.valueOf(date.toLocalTime()));
                 fi.setPrice(flight.getBigDecimal("price"));
                 fi.setOriginAirport(ph.getAirportsByIATACode(flight.getString("origin")).get(0));
                 fi.setDestinationAirport(ph.getAirportsByIATACode(flight.getString("destination")).get(0));

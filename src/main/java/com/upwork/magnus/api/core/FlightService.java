@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class FlightService implements BaseService {
     private String toIataCode;
     private boolean isDestinationSet;
     private FlightDetail flightDetail;
+    List<FlightInstanceEntity> flightInstance;
 
     public FlightService(EntityManager em, String from, String date, String tickets) {
         this.em = em;
@@ -56,14 +58,11 @@ public class FlightService implements BaseService {
 
     public void process() {
         PersistenceHelper ph = new PersistenceHelper(em);
-        java.sql.Timestamp ts = Util.offsetDateTimeToSql(dateTime);
-        List<FlightInstanceEntity> flightInstance = null;
         if (isDestinationSet){
-            flightInstance = ph.getFlightInstance(fromIataCode, toIataCode, ts, noOfTickets);
+            flightInstance = ph.getFlightInstance(fromIataCode, toIataCode, Date.valueOf(dateTime.toLocalDate()), noOfTickets);
         } else {
-            flightInstance = ph.getFlightInstance(fromIataCode, ts, noOfTickets);
+            flightInstance = ph.getFlightInstance(fromIataCode, Date.valueOf(dateTime.toLocalDate()), noOfTickets);
         }
-        convert(flightInstance, noOfTickets);
     }
 
     private void convert(List<FlightInstanceEntity> flightInstanceEntites, int noOfTickets) {
@@ -76,7 +75,7 @@ public class FlightService implements BaseService {
                 Flights f = new Flights();
                 f.setFlightID(fe.getFlightInstanceId());
                 f.setNumberOfSeats(noOfTickets);
-                f.setDate(Util.sqlTimestampToOffsetDateTime(fe.getDate(), fe.getOriginAirport().getTimeZone()).toString());
+                f.setDate(Util.sqlTimestampToOffsetDateTime(fe.getDate(), fe.getTime(), fe.getOriginAirport().getTimeZone()).toString());
                 f.setTotalPrice(fe.getPrice().multiply(new BigDecimal(noOfTickets)).doubleValue());
                 f.setTravelTime(fe.getFlight().getFlightTime());
                 f.setOrigin(fe.getOriginAirport().getIataCode());
@@ -157,6 +156,7 @@ public class FlightService implements BaseService {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } else {
+            convert(flightInstance, noOfTickets);
             return Response.status(Response.Status.OK)
                     .entity(flightDetail)
                     .type(MediaType.APPLICATION_JSON)
